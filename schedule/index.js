@@ -24,9 +24,10 @@ const schedule = require('node-schedule')
 //
 // 每周1的1点1分30秒触发 ：'30 1 1 * * 1'
 
-function setSchedule(date,callback) {
-  schedule.scheduleJob(date, callback)
+function setSchedule(date, callback) {
+    schedule.scheduleJob(date, callback)
 }
+
 module.exports = {
-  setSchedule
+    setSchedule
 }
