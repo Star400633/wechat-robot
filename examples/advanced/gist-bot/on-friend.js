@@ -18,55 +18,55 @@
  */
 
 const {
-  Friendship,
-  Wechaty,
-  // Room,
-}                 = require('wechaty')
+    Friendship,
+    Wechaty,
+    // Room,
+} = require('wechaty')
 
 export async function onFriendship(
-  request,
+    request,
 ) {
-  try {
-    const contact = request.contact()
-
-    if (request.type() === Friendship.Type.Confirm) {
-      console.log('New friend ' + contact.name() + ' relationship confirmed!')
-      return
+    try {
+        const contact = request.contact()
+        
+        if(request.type() === Friendship.Type.Confirm) {
+            console.log('New friend ' + contact.name() + ' relationship confirmed!')
+            return
+        }
+        
+        /********************************************
+         *
+         * 从这里开始修改 vvvvvvvvvvvv
+         *
+         */
+        await request.accept()
+        
+        setTimeout(
+            async _ => {
+                await contact.say('thank you for adding me')
+            },
+            3000,
+        )
+        
+        if(request.hello() === 'ding') {
+            const myRoom = await this.Room.find({topic: 'ding'})
+            if(!myRoom) return
+            setTimeout(
+                async _ => {
+                    await myRoom.add(contact)
+                    await myRoom.say('welcome ' + contact.name())
+                },
+                3000,
+            )
+        }
+        
+        /**
+         *
+         * 到这里结束修改 ^^^^^^^^^^^^
+         *
+         */
+        /*******************************************/
+    } catch (e) {
+        console.log(e)
     }
-
-    /********************************************
-     *
-     * 从这里开始修改 vvvvvvvvvvvv
-     *
-     */
-    await request.accept()
-
-    setTimeout(
-      async _ => {
-        await contact.say('thank you for adding me')
-      },
-      3000,
-    )
-
-    if (request.hello() === 'ding') {
-      const myRoom = await this.Room.find({ topic: 'ding' })
-      if (!myRoom) return
-      setTimeout(
-        async _ => {
-          await myRoom.add(contact)
-          await myRoom.say('welcome ' + contact.name())
-        },
-        3000,
-      )
-    }
-
-    /**
-     *
-     * 到这里结束修改 ^^^^^^^^^^^^
-     *
-     */
-    /*******************************************/
- } catch (e) {
-    console.log(e)
-  }
 }

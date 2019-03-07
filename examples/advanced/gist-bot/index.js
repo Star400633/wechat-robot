@@ -18,14 +18,14 @@
  */
 
 const {
-  config,
-  Wechaty,
-  log,
-}           = require('wechaty')
+    config,
+    Wechaty,
+    log,
+} = require('wechaty')
 
-const { onMessage }      = require('./on-message')
-const { onFriendship }   = require('./on-friend')
-const { onRoomJoin }     = require('./on-room-join')
+const {onMessage} = require('./on-message')
+const {onFriendship} = require('./on-friend')
+const {onRoomJoin} = require('./on-room-join')
 
 const welcome = `
 =============== Powered by Wechaty ===============
@@ -36,25 +36,34 @@ Please wait... I'm trying to login in...
 `
 console.log(welcome)
 
-const bot = Wechaty.instance({ profile: config.default.DEFAULT_PROFILE })
+const bot = Wechaty.instance({profile: config.default.DEFAULT_PROFILE})
 
 bot
 .on('scan', (qrcode, status) => {
-  require('qrcode-terminal').generate(qrcode)
-  console.log(`${qrcode}\n[${status}] Scan QR Code in above url to login: `)
+    require('qrcode-terminal').generate(qrcode)
+    console.log(`${qrcode}\n[${status}] Scan QR Code in above url to login: `)
 })
 
-.on('login'	  , async function (this, user) {
-  log.info('Bot', `${user.name()} logined`)
-  await this.say(`wechaty logined`)
-})
+.on('login', async
 
-.on('logout'	, user => log.info('Bot', `${user.name()} logouted`))
-.on('error'   , error => log.info('Bot', 'error: %s', error))
+function(
 
-.on('message',    onMessage)
+this, user
+)
+{
+    log.info('Bot', `${user.name()} logined`)
+    await
+    this.say(`wechaty logined`)
+}
+)
+
+.
+on('logout', user => log.info('Bot', `${user.name()} logouted`))
+.on('error', error => log.info('Bot', 'error: %s', error))
+
+.on('message', onMessage)
 .on('friendship', onFriendship)
-.on('room-join',  onRoomJoin)
+.on('room-join', onRoomJoin)
 
 .start()
 .catch(e => console.error(e))

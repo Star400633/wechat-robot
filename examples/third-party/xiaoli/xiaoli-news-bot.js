@@ -33,11 +33,11 @@ const bot = new Wechaty({
  *
  */
 bot
-    .on('logout', onLogout)
-    .on('login', onLogin)
-    .on('scan', onScan)
-    .on('error', onError)
-    .on('message', onMessage)
+.on('logout', onLogout)
+.on('login', onLogin)
+.on('scan', onScan)
+.on('error', onError)
+.on('message', onMessage)
 
 /**
  *
@@ -46,11 +46,11 @@ bot
  */
 // getDaily()
 bot.start()
-    .catch(async e => {
-        console.error('Bot start() fail:', e);
-        await bot.stop();
-        process.exit(-1)
-    })
+.catch(async e => {
+    console.error('Bot start() fail:', e);
+    await bot.stop();
+    process.exit(-1)
+})
 
 /**
  *
@@ -60,14 +60,14 @@ bot.start()
  */
 function onScan(qrcode, status) {
     qrTerm.generate(qrcode, {small: true})
-
+    
     // Generate a QR Code online via
     // http://goqr.me/api/doc/create-qr-code/
     const qrcodeImageUrl = [
         'https://api.qrserver.com/v1/create-qr-code/?data=',
         encodeURIComponent(qrcode),
     ].join('')
-
+    
     console.log(`[${status}] ${qrcodeImageUrl}\nScan QR Code above to log in: `)
 }
 
@@ -100,6 +100,7 @@ async function sendDaily() {
  * @type {Array}
  */
 let preNewsList = []
+
 /**
  *
  * Dealing with Messages
@@ -107,28 +108,28 @@ let preNewsList = []
  */
 async function onMessage(msg) {
     console.log(msg.toString())
-
-    if (msg.type() !== bot.Message.Type.Text) {
+    
+    if(msg.type() !== bot.Message.Type.Text) {
         console.log('Message discarded because it is not a text message')
         return
     }
-
+    
     let msgText = msg.text()
-
+    
     // A super naive implementation of intent detection for news query
-    if (msgText.endsWith("最新消息") && msgText.length > 4) {
-        respText = await searchNews(msgText.substring(0, msgText.length-4))
+    if(msgText.endsWith("最新消息") && msgText.length > 4) {
+        respText = await searchNews(msgText.substring(0, msgText.length - 4))
         await msg.say(respText)
     }
-
+    
     // query for news details
-    if (msgText.startsWith('#')) {
+    if(msgText.startsWith('#')) {
         newsNum = parseInt((msgText.substring(1)), 10) - 1
-        if (newsNum < preNewsList.length && newsNum >= 0) {
+        if(newsNum < preNewsList.length && newsNum >= 0) {
             await msg.say(preNewsList[newsNum])
         }
     }
-
+    
 }
 
 /**
@@ -152,12 +153,12 @@ async function searchNews(keyword) {
 function makeSearchResponseText(json_obj) {
     preNewsList = []
     let newsList = json_obj.contents
-    if (newsList.length === 0) {
+    if(newsList.length === 0) {
         return "暂无相关新闻"
     }
     let newsText = ''
     for (let i = 0; i < newsList.length; i++) {
-        newsText += (i+1) + '. ' + newsList[i].title + '\n'
+        newsText += (i + 1) + '. ' + newsList[i].title + '\n'
         preNewsList.push(newsList[i].news_abstract) // Save the news details for later queries
     }
     newsText += "\n回复\"#+数字\"(例如\"#1\")看详情"
@@ -186,7 +187,7 @@ function makeDailyResponseText(json_obj) {
         newsText += secList[i].title + '\n'
         let newsList = secList[i].contents
         for (let j = 0; j < Math.min(newsList.length, 3); j++) {
-            newsText += (j+1) + '. ' + newsList[j].title + '\n'
+            newsText += (j + 1) + '. ' + newsList[j].title + '\n'
         }
         newsText += '\n'
     }
@@ -211,7 +212,7 @@ async function fetchXiaoliAPI(URL, postBody, okCallback) {
             }
         )
         let resp_json = await resp.json()
-        if (resp.ok) {
+        if(resp.ok) {
             // status code = 200, we got it!
             resText = okCallback(resp_json['data'])
         } else {

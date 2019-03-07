@@ -18,60 +18,60 @@
  */
 
 const {
-  Message,
-  Wechaty,
-}             = require('wechaty')
+    Message,
+    Wechaty,
+} = require('wechaty')
 
 export async function onMessage(message) {
-  try {
-    const room      = message.room()
-    const sender    = message.from()
-    const content   = message.text()
-
-    console.log((room ? '[' + await room.topic() + ']' : '')
-                + '<' + (sender && sender.name()) + '>'
-                + ':' + message,
-    )
-
-    if (message.self() || room) {
-      console.log('message is sent from myself, or inside a room.')
-      return
+    try {
+        const room = message.room()
+        const sender = message.from()
+        const content = message.text()
+        
+        console.log((room ? '[' + await room.topic() + ']' : '')
+            + '<' + (sender && sender.name()) + '>'
+            + ':' + message,
+        )
+        
+        if(message.self() || room) {
+            console.log('message is sent from myself, or inside a room.')
+            return
+        }
+        
+        /********************************************
+         *
+         * 从下面开始修改vvvvvvvvvvvv
+         *
+         */
+        if(!sender) return
+        
+        if(content === 'ding') {
+            await message.say('thanks for ding me')
+            
+            const myRoom = await this.Room.find({topic: 'ding'})
+            if(!myRoom) return
+            
+            if(await myRoom.has(sender)) {
+                await sender.say('no need to ding again, because you are already in ding room')
+                return
+            }
+            
+            await sender.say('ok, I will put you in ding room!')
+            await myRoom.add(sender)
+            return
+            
+        } else if(content === 'dong') {
+            await sender.say('ok, dong me is welcome, too.')
+            return
+        }
+        
+        /**
+         *
+         * 到这里结束修改^^^^^^^^^^^^
+         *
+         */
+        /*********************************************/
+    } catch (e) {
+        console.error(e)
     }
-
-    /********************************************
-     *
-     * 从下面开始修改vvvvvvvvvvvv
-     *
-     */
-    if (!sender) return
-
-    if (content === 'ding') {
-      await message.say('thanks for ding me')
-
-      const myRoom = await this.Room.find({ topic: 'ding' })
-      if (!myRoom) return
-
-      if (await myRoom.has(sender)) {
-        await sender.say('no need to ding again, because you are already in ding room')
-        return
-      }
-
-      await sender.say('ok, I will put you in ding room!')
-      await myRoom.add(sender)
-      return
-
-    } else if (content === 'dong') {
-      await sender.say('ok, dong me is welcome, too.')
-      return
-    }
-
-    /**
-     *
-     * 到这里结束修改^^^^^^^^^^^^
-     *
-     */
-    /*********************************************/
-  } catch (e) {
-    console.error(e)
-  }
 }

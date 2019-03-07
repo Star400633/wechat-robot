@@ -16,15 +16,15 @@
  *   limitations under the License.
  *
  */
-async function onScan (qrcode, status) {
-  require('qrcode-terminal').generate(qrcode, {small: true})
-
-  const qrcodeImageUrl = [
-    'https://api.qrserver.com/v1/create-qr-code/?data=',
-    encodeURIComponent(qrcode),
-  ].join('')
-
-  console.log(status, qrcodeImageUrl)
+async function onScan(qrcode, status) {
+    require('qrcode-terminal').generate(qrcode, {small: true})
+    
+    const qrcodeImageUrl = [
+        'https://api.qrserver.com/v1/create-qr-code/?data=',
+        encodeURIComponent(qrcode),
+    ].join('')
+    
+    console.log(status, qrcodeImageUrl)
 }
 
 module.exports = onScan

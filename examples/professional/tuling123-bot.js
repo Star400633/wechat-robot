@@ -1,9 +1,9 @@
 const qrTerm = require('qrcode-terminal')
 const Tuling123 = require('tuling123-client')
 
-const { 
-  Wechaty, 
-  Message,
+const {
+    Wechaty,
+    Message,
 } = require('wechaty')
 
 const welcome = `
@@ -32,46 +32,46 @@ const tuling = new Tuling123(TULING123_API_KEY)
 
 const bot = new Wechaty()
 
-bot.on('scan',    onScan)
-bot.on('login',   onLogin)
-bot.on('logout',  onLogout)
+bot.on('scan', onScan)
+bot.on('login', onLogin)
+bot.on('logout', onLogout)
 bot.on('message', onMessage)
-bot.on('error',   onError)
+bot.on('error', onError)
 
 bot.start()
 .catch(console.error)
 
-function onScan (qrcode, status) {
-  qrTerm.generate(qrcode, { small: true })  // show qrcode on console
+function onScan(qrcode, status) {
+    qrTerm.generate(qrcode, {small: true})  // show qrcode on console
 }
 
-function onLogin (user) {
-  console.log(`${user} login`)
+function onLogin(user) {
+    console.log(`${user} login`)
 }
 
-function onLogout (user) {
-  console.log(`${user} logout`)
+function onLogout(user) {
+    console.log(`${user} logout`)
 }
 
-function onError (e) {
-  console.error(e)
+function onError(e) {
+    console.error(e)
 }
 
-async function onMessage (msg) {
-  // Skip message from self, or inside a room
-  if (msg.self() || msg.room() || msg.from().name() === '微信团队' || msg.type() !== Message.Type.Text) return
-
-  console.log('Bot', 'talk: %s'  , msg.text())
-
-  try {
-    const {text: reply} = await tuling.ask(msg.text(), {userid: msg.from()})
-    console.log('Tuling123', 'Talker reply:"%s" for "%s" ',
-                          reply,
-                          msg.text(),
-            )
-    await msg.say(reply)
-  } catch (e) {
-    console.error('Bot', 'on message tuling.ask() exception: %s' , e && e.message || e)
-  }
+async function onMessage(msg) {
+    // Skip message from self, or inside a room
+    if(msg.self() || msg.room() || msg.from().name() === '微信团队' || msg.type() !== Message.Type.Text) return
+    
+    console.log('Bot', 'talk: %s', msg.text())
+    
+    try {
+        const {text: reply} = await tuling.ask(msg.text(), {userid: msg.from()})
+        console.log('Tuling123', 'Talker reply:"%s" for "%s" ',
+            reply,
+            msg.text(),
+        )
+        await msg.say(reply)
+    } catch (e) {
+        console.error('Bot', 'on message tuling.ask() exception: %s', e && e.message || e)
+    }
 }
 

@@ -16,11 +16,11 @@
  *   limitations under the License.
  *
  */
-export default async function onScan (url, code) {
-  let loginUrl = url.replace('qrcode', 'l')
-  console.log(code, url)
-
-  if (code === 0) {
-    require('qrcode-terminal').generate(loginUrl)
-  }
+export default async function onScan(url, code) {
+    let loginUrl = url.replace('qrcode', 'l')
+    console.log(code, url)
+    
+    if(code === 0) {
+        require('qrcode-terminal').generate(loginUrl)
+    }
 }

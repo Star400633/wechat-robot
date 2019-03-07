@@ -17,14 +17,14 @@
  *
  */
 /* tslint:disable:variable-name */
-import { generate } from 'qrcode-terminal'
-import { finis }    from 'finis'
+import {generate} from 'qrcode-terminal'
+import {finis} from 'finis'
 
 import {
-  Wechaty,
-  log,
-  qrcodeValueToImageUrl,
-}                         from 'wechaty'  // from 'wechaty'
+    Wechaty,
+    log,
+    qrcodeValueToImageUrl,
+} from 'wechaty'  // from 'wechaty'
 
 const bot = Wechaty.instance()
 
@@ -56,100 +56,100 @@ Please wait... I'm trying to login in...
 console.log(welcome)
 
 bot
-.on('login'	  , user => {
-  log.info('Bot', `${user.name()} login`)
-  bot.say('Wechaty login').catch(console.error)
-})
-.on('scan', (qrcode, status, data) => {
-  generate(qrcode, { small: true })
-  if (data) {
-    console.log(data)
-  }
-  console.log(qrcodeValueToImageUrl(qrcode))
-  console.log('^^^ Online QR Code Image URL ^^^ ')
-  console.log(`[${status}] ${qrcode} Scan QR Code above url to log in: `)
-})
-.on('message', async msg => {
-  console.log(msg.toString())
-  console.log('Please press Ctrl+C to kill me!')
-  console.log(`Then I'll send my last word to myself, check it out on your Wechat!`)
-})
+    .on('login', user => {
+        log.info('Bot', `${user.name()} login`)
+        bot.say('Wechaty login').catch(console.error)
+    })
+    .on('scan', (qrcode, status, data) => {
+        generate(qrcode, {small: true})
+        if (data) {
+            console.log(data)
+        }
+        console.log(qrcodeValueToImageUrl(qrcode))
+        console.log('^^^ Online QR Code Image URL ^^^ ')
+        console.log(`[${status}] ${qrcode} Scan QR Code above url to log in: `)
+    })
+    .on('message', async msg => {
+        console.log(msg.toString())
+        console.log('Please press Ctrl+C to kill me!')
+        console.log(`Then I'll send my last word to myself, check it out on your Wechat!`)
+    })
 
 bot.on('error', async e => {
-  log.error('Bot', 'error: %s', e)
-  if (bot.logonoff()) {
-    await bot.say('Wechaty error: ' + e.message).catch(console.error)
-  }
+    log.error('Bot', 'error: %s', e)
+    if (bot.logonoff()) {
+        await bot.say('Wechaty error: ' + e.message).catch(console.error)
+    }
 })
 
 let killChrome: NodeJS.SignalsListener
 
 bot.start()
-.then(() => {
-  const listenerList = process.listeners('SIGINT')
-  for (const listener of listenerList) {
-    if (listener.name === 'killChrome') {
-      process.removeListener('SIGINT', listener)
-      killChrome = listener
-    }
-  }
-})
-.catch(async e => {
-  log.error('Bot', 'start() fail: %s', e)
-  await bot.stop()
-  process.exit(-1)
-})
+    .then(() => {
+        const listenerList = process.listeners('SIGINT')
+        for (const listener of listenerList) {
+            if (listener.name === 'killChrome') {
+                process.removeListener('SIGINT', listener)
+                killChrome = listener
+            }
+        }
+    })
+    .catch(async e => {
+        log.error('Bot', 'start() fail: %s', e)
+        await bot.stop()
+        process.exit(-1)
+    })
 
 let quiting = false
 finis(async (code, signal) => {
-  log.info('Bot', 'finis(%s, %s)', code, signal)
+    log.info('Bot', 'finis(%s, %s)', code, signal)
 
-  if (!bot.logonoff()) {
-    log.info('Bot', 'finis() bot had been already stopped')
-    doExit(code)
-  }
-
-  if (quiting) {
-    log.warn('Bot', 'finis() already quiting... return and wait...')
-    return
-  }
-
-  quiting = true
-  let done = false
-  // let checkNum = 0
-
-  const exitMsg = `Wechaty will exit ${code} because of ${signal} `
-
-  log.info('Bot', 'finis() broadcast quiting message for bot')
-  await bot.say(exitMsg)
-      // .then(() => bot.stop())
-      .catch(e => log.error('Bot', 'finis() catch rejection: %s', e))
-      .then(() => done = true)
-
-  setImmediate(checkForExit)
-
-  function checkForExit() {
-    // if (checkNum++ % 100 === 0) {
-    log.info('Bot', 'finis() checkForExit() checking done: %s', done)
-    // }
-    if (done) {
-      log.info('Bot', 'finis() checkForExit() done!')
-      setTimeout(() => doExit(code), 1000)  // delay 1 second
-      return
+    if (!bot.logonoff()) {
+        log.info('Bot', 'finis() bot had been already stopped')
+        doExit(code)
     }
-    // death loop to wait for `done`
-    // process.nextTick(checkForExit)
-    // setImmediate(checkForExit)
-    setTimeout(checkForExit, 100)
-  }
+
+    if (quiting) {
+        log.warn('Bot', 'finis() already quiting... return and wait...')
+        return
+    }
+
+    quiting = true
+    let done = false
+    // let checkNum = 0
+
+    const exitMsg = `Wechaty will exit ${code} because of ${signal} `
+
+    log.info('Bot', 'finis() broadcast quiting message for bot')
+    await bot.say(exitMsg)
+    // .then(() => bot.stop())
+        .catch(e => log.error('Bot', 'finis() catch rejection: %s', e))
+        .then(() => done = true)
+
+    setImmediate(checkForExit)
+
+    function checkForExit() {
+        // if (checkNum++ % 100 === 0) {
+        log.info('Bot', 'finis() checkForExit() checking done: %s', done)
+        // }
+        if (done) {
+            log.info('Bot', 'finis() checkForExit() done!')
+            setTimeout(() => doExit(code), 1000)  // delay 1 second
+            return
+        }
+        // death loop to wait for `done`
+        // process.nextTick(checkForExit)
+        // setImmediate(checkForExit)
+        setTimeout(checkForExit, 100)
+    }
 })
 
 function doExit(code: number): void {
-  log.info('Bot', 'doExit(%d)', code)
-  if (killChrome) {
-    killChrome('SIGINT')
-  }
-  process.exit(code)
+    log.info('Bot', 'doExit(%d)', code)
+    if (killChrome) {
+        killChrome('SIGINT')
+    }
+    process.exit(code)
 }
 
 // process.on('SIGINT', function() {

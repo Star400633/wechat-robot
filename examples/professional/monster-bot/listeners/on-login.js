@@ -16,6 +16,6 @@
  *   limitations under the License.
  *
  */
-export default async function onLogin (user) {
-  console.log(`${user} login`)
+export default async function onLogin(user) {
+    console.log(`${user} login`)
 }

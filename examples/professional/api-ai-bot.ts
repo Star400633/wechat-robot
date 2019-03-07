@@ -28,12 +28,12 @@
 /* tslint:disable:variable-name */
 const QrcodeTerminal = require('qrcode-terminal')
 
-import { Brolog as log } from 'brolog'
+import {Brolog as log} from 'brolog'
 /* tslint:disable:no-var-requires */
 // const co  = require('co')
 /* tslint:disable:variable-name */
 const ApiAi = require('apiai')
-import { EventEmitter } from 'events'
+import {EventEmitter} from 'events'
 
 /**
  * Change `import { ... } from '../'`
@@ -41,10 +41,10 @@ import { EventEmitter } from 'events'
  * when you are runing with Docker or NPM instead of Git Source.
  */
 import {
-  config,
-  Wechaty,
-  Message,
-}           from 'wechaty'
+    config,
+    Wechaty,
+    Message,
+} from 'wechaty'
 
 // log.level = 'verbose'
 // log.level = 'silly'
@@ -57,7 +57,7 @@ import {
 const APIAI_API_KEY = '7217d7bce18c4bcfbe04ba7bdfaf9c08'
 const brainApiAi = ApiAi(APIAI_API_KEY)
 
-const bot = Wechaty.instance({ profile: config.default.DEFAULT_PROFILE })
+const bot = Wechaty.instance({profile: config.default.DEFAULT_PROFILE})
 
 console.log(`
 Welcome to api.AI Wechaty Bot.
@@ -70,148 +70,154 @@ Loading... please wait for QrCode Image Url and then scan to login.
 `)
 
 bot
-.on('scan', (qrcode, status) => {
-  QrcodeTerminal.generate(qrcode)
-  console.log(`${qrcode}\n[${status}] Scan QR Code in above url to login: `)
-})
-.on('login'  , user => log.info('Bot', `bot login: ${user}`))
-.on('logout' , user => log.info('Bot', 'bot %s logout.', user))
-.on('message', async m => {
-  if (m.self()) { return }
+    .on('scan', (qrcode, status) => {
+        QrcodeTerminal.generate(qrcode)
+        console.log(`${qrcode}\n[${status}] Scan QR Code in above url to login: `)
+    })
+    .on('login', user => log.info('Bot', `bot login: ${user}`))
+    .on('logout', user => log.info('Bot', 'bot %s logout.', user))
+    .on('message', async m => {
+        if (m.self()) {
+            return
+        }
 
-  // co(function* () {
-  //   const msg = yield m.load()
-  const room = m.room()
+        // co(function* () {
+        //   const msg = yield m.load()
+        const room = m.room()
 
-  if (room && /Wechaty/i.test(await room.topic())) {
-    log.info('Bot', 'talk: %s'  , m)
-    talk(m)
-  } else {
-    log.info('Bot', 'recv: %s'  , m)
-  }
-  // })
-  // .catch(e => log.error('Bot', 'on message rejected: %s' , e))
-})
+        if (room && /Wechaty/i.test(await room.topic())) {
+            log.info('Bot', 'talk: %s', m)
+            talk(m)
+        } else {
+            log.info('Bot', 'recv: %s', m)
+        }
+        // })
+        // .catch(e => log.error('Bot', 'on message rejected: %s' , e))
+    })
 
 bot.start()
-.catch(async e => {
-  log.error('Bot', 'init() fail:' + e)
-  await bot.stop()
-  process.exit(-1)
-})
+    .catch(async e => {
+        log.error('Bot', 'init() fail:' + e)
+        await bot.stop()
+        process.exit(-1)
+    })
 
 class Talker extends EventEmitter {
-  private thinker: (text: string) => Promise<string>
-  private obj: {
-    text: string[],
-    time: number[],
-  }
-  private timer?: NodeJS.Timer
-
-  constructor(
-    thinker: (text: string) => Promise<string>,
-  ) {
-    log.verbose('Talker()')
-    super()
-    this.thinker = thinker
-    this.obj = {
-      text: [],
-      time: [],
+    private thinker: (text: string) => Promise<string>
+    private obj: {
+        text: string[],
+        time: number[],
     }
-  }
+    private timer?: NodeJS.Timer
 
-  public save(text: string) {
-    log.verbose('Talker', 'save(%s)', text)
-    this.obj.text.push(text)
-    this.obj.time.push(Date.now())
-  }
-  public load() {
-    const text = this.obj.text.join(', ')
-    log.verbose('Talker', 'load(%s)', text)
-    this.obj.text = []
-    this.obj.time = []
-    return text
-  }
+    constructor(
+        thinker: (text: string) => Promise<string>,
+    ) {
+        log.verbose('Talker()')
+        super()
+        this.thinker = thinker
+        this.obj = {
+            text: [],
+            time: [],
+        }
+    }
 
-  public updateTimer(delayTime?: number) {
-    delayTime = delayTime || this.delayTime()
-    log.verbose('Talker', 'updateTimer(%s)', delayTime)
+    public save(text: string) {
+        log.verbose('Talker', 'save(%s)', text)
+        this.obj.text.push(text)
+        this.obj.time.push(Date.now())
+    }
 
-    if (this.timer) { clearTimeout(this.timer) }
-    this.timer = setTimeout(this.say.bind(this), delayTime, 3)
-  }
+    public load() {
+        const text = this.obj.text.join(', ')
+        log.verbose('Talker', 'load(%s)', text)
+        this.obj.text = []
+        this.obj.time = []
+        return text
+    }
 
-  public hear(text: string) {
-    log.verbose('Talker', `hear(${text})`)
-    this.save(text)
-    this.updateTimer()
-  }
-  public async say() {
-    log.verbose('Talker', 'say()')
-    const text  = this.load()
-    await this.thinker(text)
-    .then(reply => this.emit('say', reply))
-    this.timer = undefined
-  }
+    public updateTimer(delayTime?: number) {
+        delayTime = delayTime || this.delayTime()
+        log.verbose('Talker', 'updateTimer(%s)', delayTime)
 
-  public delayTime() {
-    const minDelayTime = 5000
-    const maxDelayTime = 15000
-    const delayTime = Math.floor(Math.random() * (maxDelayTime - minDelayTime)) + minDelayTime
-    return delayTime
-  }
+        if (this.timer) {
+            clearTimeout(this.timer)
+        }
+        this.timer = setTimeout(this.say.bind(this), delayTime, 3)
+    }
+
+    public hear(text: string) {
+        log.verbose('Talker', `hear(${text})`)
+        this.save(text)
+        this.updateTimer()
+    }
+
+    public async say() {
+        log.verbose('Talker', 'say()')
+        const text = this.load()
+        await this.thinker(text)
+            .then(reply => this.emit('say', reply))
+        this.timer = undefined
+    }
+
+    public delayTime() {
+        const minDelayTime = 5000
+        const maxDelayTime = 15000
+        const delayTime = Math.floor(Math.random() * (maxDelayTime - minDelayTime)) + minDelayTime
+        return delayTime
+    }
 }
 
 /* tslint:disable:variable-name */
 const Talkers: {
-  [index: string]: Talker,
- } = {}
+    [index: string]: Talker,
+} = {}
 
 function talk(m: Message) {
-  const from    = m.from()
-  const fromId  = from && from.id
+    const from = m.from()
+    const fromId = from && from.id
 
-  const room    = m.room()
-  const roomId  = room && room.id
+    const room = m.room()
+    const roomId = room && room.id
 
-  const content = m.text()
+    const content = m.text()
 
-  const talkerName = roomId + (fromId || '')
-  if (!Talkers[talkerName]) {
-    Talkers[talkerName] = new Talker(function(text: string) {
-      return new Promise((resolve, reject) => {
-        brainApiAi.textRequest(text)
-        .on('response', function(response: any) {
-          console.log(response)
-          /*
-{ id: 'a09381bb-8195-4139-b49c-a2d03ad5e014',
-  timestamp: '2016-05-27T17:22:46.597Z',
-  result:
-   { source: 'domains',
-     resolvedQuery: 'hi',
-     action: 'smalltalk.greetings',
-     parameters: { simplified: 'hello' },w
-     metadata: {},
-     fulfillment: { speech: 'Hi there.' },
-     score: 0 },
-  status: { code: 200, errorType: 'success' } }
-          */
-          const reply: string = response.result.fulfillment.speech
-          if (!reply) {
-            log.info('ApiAi', `Talker do not want to talk for "${text}"`)
-            return reject()
-          }
-          log.info('ApiAi', 'Talker reply:"%s" for "%s" ', reply, text)
-          return resolve(reply)
+    const talkerName = roomId + (fromId || '')
+    if (!Talkers[talkerName]) {
+        Talkers[talkerName] = new Talker(function (text: string) {
+            return new Promise((resolve, reject) => {
+                brainApiAi.textRequest(text)
+                    .on('response', function (response: any) {
+                        console.log(response)
+                        /*
+              { id: 'a09381bb-8195-4139-b49c-a2d03ad5e014',
+                timestamp: '2016-05-27T17:22:46.597Z',
+                result:
+                 { source: 'domains',
+                   resolvedQuery: 'hi',
+                   action: 'smalltalk.greetings',
+                   parameters: { simplified: 'hello' },w
+                   metadata: {},
+                   fulfillment: { speech: 'Hi there.' },
+                   score: 0 },
+                status: { code: 200, errorType: 'success' } }
+                        */
+                        const reply: string = response.result.fulfillment.speech
+                        if (!reply) {
+                            log.info('ApiAi', `Talker do not want to talk for "${text}"`)
+                            return reject()
+                        }
+                        log.info('ApiAi', 'Talker reply:"%s" for "%s" ', reply, text)
+                        return resolve(reply)
+                    })
+                    .on('error', function (error: Error) {
+                        log.error('ApiAi', error)
+                        reject(error)
+                    })
+                    .end()
+            })
         })
-        .on('error', function(error: Error) {
-          log.error('ApiAi', error)
-          reject(error)
-        })
-        .end()
-      })
-    })
-    Talkers[talkerName].on('say', reply => m.say(reply))
-  }
-  Talkers[talkerName].hear(content)
+        Talkers[talkerName].on('say', reply => m.say(reply))
+    }
+    Talkers[talkerName].hear(content)
 }

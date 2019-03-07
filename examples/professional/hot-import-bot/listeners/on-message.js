@@ -16,8 +16,8 @@
  *   limitations under the License.
  *
  */
-async function onMessage (message) {
-  console.log(`Received message: ${message}`)
+async function onMessage(message) {
+    console.log(`Received message: ${message}`)
 }
 
 module.exports = onMessage

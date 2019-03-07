@@ -28,27 +28,27 @@ const TelegramBot = require('node-telegram-bot-api')
 const WechatyTelegramBot = require('wechaty-telegram')
 
 const initBot = (ChatBot, token) => {
-  const bot = new ChatBot(token, {
-    // the "polling" option applies for a Telegram bot
-    // for WeChat bot, "polling" and "webhook" works in the same way
-    polling: true,
-    // options for Wechaty and Wechaty Telegram Bot Adaptor
-    wechaty: {
-      // if you do not want your bot to add a friend automatically
-      autoFriend: false
-    }
-  })
-
-  let roger = 'roger'
-
-  bot.on('message', msg => {
-    bot.sendMessage(msg.chat.id, roger) // send roger
-  })
-
-  // use regular expressions to detect commands
-  bot.onText(/^\/setroger (.*)$/, (msg, match) => {
-    roger = match[1] // set roger message from user's input
-  })
+    const bot = new ChatBot(token, {
+        // the "polling" option applies for a Telegram bot
+        // for WeChat bot, "polling" and "webhook" works in the same way
+        polling: true,
+        // options for Wechaty and Wechaty Telegram Bot Adaptor
+        wechaty: {
+            // if you do not want your bot to add a friend automatically
+            autoFriend: false
+        }
+    })
+    
+    let roger = 'roger'
+    
+    bot.on('message', msg => {
+        bot.sendMessage(msg.chat.id, roger) // send roger
+    })
+    
+    // use regular expressions to detect commands
+    bot.onText(/^\/setroger (.*)$/, (msg, match) => {
+        roger = match[1] // set roger message from user's input
+    })
 }
 
 initBot(TelegramBot, '123456:TOKEN') // you may obtain a Telegram bot token

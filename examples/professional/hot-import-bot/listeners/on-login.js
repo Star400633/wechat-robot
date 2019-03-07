@@ -16,8 +16,8 @@
  *   limitations under the License.
  *
  */
-async function onLogin (user) {
-  console.log(`${user} login`)
+async function onLogin(user) {
+    console.log(`${user} login`)
 }
 
 module.exports = onLogin

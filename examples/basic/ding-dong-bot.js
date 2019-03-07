@@ -17,11 +17,11 @@
  *
  */
 const {
-  Wechaty,
-  config,
-}           = require('wechaty')
+    Wechaty,
+    config,
+} = require('wechaty')
 
-const { FileBox }  = require('file-box')
+const {FileBox} = require('file-box')
 const qrTerm = require('qrcode-terminal')
 
 /**
@@ -30,7 +30,7 @@ const qrTerm = require('qrcode-terminal')
  *
  */
 const bot = new Wechaty({
-  profile : config.default.DEFAULT_PROFILE,
+    profile: config.default.DEFAULT_PROFILE,
 })
 
 /**
@@ -40,9 +40,9 @@ const bot = new Wechaty({
  */
 bot
 .on('logout', onLogout)
-.on('login',  onLogin)
-.on('scan',   onScan)
-.on('error',  onError)
+.on('login', onLogin)
+.on('scan', onScan)
+.on('error', onError)
 .on('message', onMessage)
 
 /**
@@ -52,9 +52,9 @@ bot
  */
 bot.start()
 .catch(async e => {
-  console.error('Bot start() fail:', e)
-  await bot.stop()
-  process.exit(-1)
+    console.error('Bot start() fail:', e)
+    await bot.stop()
+    process.exit(-1)
 })
 
 /**
@@ -69,35 +69,35 @@ bot.start()
  *  `scan`, `login`, `logout`, `error`, and `message`
  *
  */
-function onScan (qrcode, status) {
-  qrTerm.generate(qrcode, { small: true })
-
-  // Generate a QR Code online via
-  // http://goqr.me/api/doc/create-qr-code/
-  const qrcodeImageUrl = [
-    'https://api.qrserver.com/v1/create-qr-code/?data=',
-    encodeURIComponent(qrcode),
-  ].join('')
-
-  console.log(`[${status}] ${qrcodeImageUrl}\nScan QR Code above to log in: `)
+function onScan(qrcode, status) {
+    qrTerm.generate(qrcode, {small: true})
+    
+    // Generate a QR Code online via
+    // http://goqr.me/api/doc/create-qr-code/
+    const qrcodeImageUrl = [
+        'https://api.qrserver.com/v1/create-qr-code/?data=',
+        encodeURIComponent(qrcode),
+    ].join('')
+    
+    console.log(`[${status}] ${qrcodeImageUrl}\nScan QR Code above to log in: `)
 }
 
-function onLogin (user) {
-  console.log(`${user.name()} login`)
-  bot.say('Wechaty login').catch(console.error)
+function onLogin(user) {
+    console.log(`${user.name()} login`)
+    bot.say('Wechaty login').catch(console.error)
 }
 
-function onLogout (user) {
-  console.log(`${user.name()} logouted`)
+function onLogout(user) {
+    console.log(`${user.name()} logouted`)
 }
 
-function onError (e) {
-  console.error('Bot error:', e)
-  /*
-  if (bot.logonoff()) {
-    bot.say('Wechaty error: ' + e.message).catch(console.error)
-  }
-  */
+function onError(e) {
+    console.error('Bot error:', e)
+    /*
+    if (bot.logonoff()) {
+      bot.say('Wechaty error: ' + e.message).catch(console.error)
+    }
+    */
 }
 
 /**
@@ -106,44 +106,44 @@ function onError (e) {
  *    dealing with Messages.
  *
  */
-async function onMessage (msg) {
-  console.log(msg.toString())
-
-  if (msg.age() > 60) {
-    console.log('Message discarded because its TOO OLD(than 1 minute)')
-    return
-  }
-
-  if (   msg.type() !== bot.Message.Type.Text
-      || !/^(ding|ping|bing|code)$/i.test(msg.text())
-      /*&& !msg.self()*/
-  ) {
-    console.log('Message discarded because it does not match ding/ping/bing/code')
-    return
-  }
-
-  /**
-   * 1. reply 'dong'
-   */
-  await msg.say('dong')
-  console.log('REPLY: dong')
-
-  /**
-   * 2. reply image(qrcode image)
-   */
-  const fileBox = FileBox.fromUrl('https://chatie.io/wechaty/images/bot-qr-code.png')
-
-  await msg.say(fileBox)
-  console.log('REPLY: %s', fileBox.toString())
-
-  /**
-   * 3. reply 'scan now!'
-   */
-  await msg.say([
-    'Join Wechaty Developers Community\n\n',
-    'Scan now, because other Wechaty developers want to talk with you too!\n\n',
-    '(secret code: wechaty)',
-  ].join(''))
+async function onMessage(msg) {
+    console.log(msg.toString())
+    
+    if(msg.age() > 60) {
+        console.log('Message discarded because its TOO OLD(than 1 minute)')
+        return
+    }
+    
+    if(msg.type() !== bot.Message.Type.Text
+        || !/^(ding|ping|bing|code)$/i.test(msg.text())
+    /*&& !msg.self()*/
+    ) {
+        console.log('Message discarded because it does not match ding/ping/bing/code')
+        return
+    }
+    
+    /**
+     * 1. reply 'dong'
+     */
+    await msg.say('dong')
+    console.log('REPLY: dong')
+    
+    /**
+     * 2. reply image(qrcode image)
+     */
+    const fileBox = FileBox.fromUrl('https://chatie.io/wechaty/images/bot-qr-code.png')
+    
+    await msg.say(fileBox)
+    console.log('REPLY: %s', fileBox.toString())
+    
+    /**
+     * 3. reply 'scan now!'
+     */
+    await msg.say([
+        'Join Wechaty Developers Community\n\n',
+        'Scan now, because other Wechaty developers want to talk with you too!\n\n',
+        '(secret code: wechaty)',
+    ].join(''))
 }
 
 /**

@@ -5,15 +5,15 @@
 import * as blessed from 'blessed'
 import * as contrib from 'blessed-contrib'
 
-import { generate } from 'qrcode-terminal'
+import {generate} from 'qrcode-terminal'
 
 import {
-  Wechaty,
-}               from 'wechaty'
+    Wechaty,
+} from 'wechaty'
 
 const screen = blessed.screen({
-  smartCSR:     true,
-  fullUnicode:  true,  // https://github.com/chjj/blessed/issues/226#issuecomment-188777457
+    smartCSR: true,
+    fullUnicode: true,  // https://github.com/chjj/blessed/issues/226#issuecomment-188777457
 })
 
 // create layout and widgets
@@ -27,13 +27,13 @@ const grid = new contrib.grid({rows: 12, cols: 12, screen: screen})
  *   self.options.yPadding = options.yPadding || 2; //padding from the top
  */
 const donut = grid.set(8, 8, 4, 2, contrib.donut,
-  {
-  label: 'Percent Donut',
-  radius: 16,
-  arcWidth: 4,
-  yPadding: 2,
-  data: [{label: 'Storage', percent: 87}],
-})
+    {
+        label: 'Percent Donut',
+        radius: 16,
+        arcWidth: 4,
+        yPadding: 2,
+        data: [{label: 'Storage', percent: 87}],
+    })
 
 // const latencyLine = grid.set(8, 8, 4, 2, contrib.line,
 //   { style:
@@ -48,23 +48,29 @@ const gauge = grid.set(8, 10, 2, 2, contrib.gauge, {label: 'Storage', percent: [
 const gaugeTwo = grid.set(2, 9, 2, 3, contrib.gauge, {label: 'Deployment Progress', percent: 80})
 
 const sparkline = grid.set(10, 10, 2, 2, contrib.sparkline,
-  { label: 'Throughput (bits/sec)'
-  , tags: true
-  , style: { fg: 'blue', titleFg: 'white' }})
+    {
+        label: 'Throughput (bits/sec)'
+        , tags: true
+        , style: {fg: 'blue', titleFg: 'white'}
+    })
 
 const bar = grid.set(4, 6, 4, 3, contrib.bar,
-  { label: 'Server Utilization (%)'
-  , barWidth: 4
-  , barSpacing: 6
-  , xOffset: 2
-  , maxHeight: 9})
+    {
+        label: 'Server Utilization (%)'
+        , barWidth: 4
+        , barSpacing: 6
+        , xOffset: 2
+        , maxHeight: 9
+    })
 
-const table =  grid.set(4, 9, 4, 3, contrib.table,
-  { keys: true
-  , fg: 'green'
-  , label: 'Active Processes'
-  , columnSpacing: 1
-  , columnWidth: [24, 10, 10]})
+const table = grid.set(4, 9, 4, 3, contrib.table,
+    {
+        keys: true
+        , fg: 'green'
+        , label: 'Active Processes'
+        , columnSpacing: 1
+        , columnWidth: [24, 10, 10]
+    })
 
 /*
  *
@@ -82,45 +88,45 @@ const table =  grid.set(4, 9, 4, 3, contrib.table,
   options.color = options.color || "white";
 */
 const lcdLineOne = grid.set(0, 9, 2, 3, contrib.lcd,
-  {
-    label: 'LCD Test',
-    segmentWidth: 0.06,
-    segmentInterval: 0.11,
-    strokeWidth: 0.1,
-    elements: 5,
-    display: 3210,
-    elementSpacing: 4,
-    elementPadding: 2,
-  },
+    {
+        label: 'LCD Test',
+        segmentWidth: 0.06,
+        segmentInterval: 0.11,
+        strokeWidth: 0.1,
+        elements: 5,
+        display: 3210,
+        elementSpacing: 4,
+        elementPadding: 2,
+    },
 )
 
 const errorsLine = grid.set(0, 6, 4, 3, contrib.line, {
-  style: {
-    line: 'red',
-    text: 'white',
-    baseline: 'black',
-  },
-  label: 'Errors Rate',
-  maxY: 60,
-  showLegend: true,
+    style: {
+        line: 'red',
+        text: 'white',
+        baseline: 'black',
+    },
+    label: 'Errors Rate',
+    maxY: 60,
+    showLegend: true,
 })
 
 const boyConsole = grid.set(0, 0, 6, 6, contrib.log, {
-  fg: 'green',
-  selectedFg: 'green',
-  label: 'Boy Bot',
+    fg: 'green',
+    selectedFg: 'green',
+    label: 'Boy Bot',
 })
 
 const girlConsole = grid.set(6, 0, 6, 6, contrib.log, {
-  fg: 'red',
-  selectedFg: 'red',
-  label: 'Girl Bot',
+    fg: 'red',
+    selectedFg: 'red',
+    label: 'Girl Bot',
 })
 
 const log = grid.set(8, 6, 4, 2, contrib.log, {
-  fg: 'green',
-  selectedFg: 'green',
-  label: 'Server Log',
+    fg: 'green',
+    selectedFg: 'green',
+    label: 'Server Log',
 })
 
 // dummy data
@@ -129,44 +135,45 @@ const commands = ['grep', 'node', 'java', 'timer', '~/ls -l', 'netns', 'watchdog
 
 // set dummy data on gauge
 let gaugePercent = 0
-setInterval(function() {
-  gauge.setData([gaugePercent, 100 - gaugePercent])
-  gaugePercent++
-  if (gaugePercent >= 100) gaugePercent = 0
+setInterval(function () {
+    gauge.setData([gaugePercent, 100 - gaugePercent])
+    gaugePercent++
+    if (gaugePercent >= 100) gaugePercent = 0
 }, 200)
 
 let gaugePercentTwo = 0
-setInterval(function() {
-  gaugeTwo.setData(gaugePercentTwo)
-  gaugePercentTwo++
-  if (gaugePercentTwo >= 100) gaugePercentTwo = 0
+setInterval(function () {
+    gaugeTwo.setData(gaugePercentTwo)
+    gaugePercentTwo++
+    if (gaugePercentTwo >= 100) gaugePercentTwo = 0
 }, 200)
 
 // set dummy data on bar chart
 function fillBar() {
-  const arr: number[] = []
-  for (let i = 0; i < servers.length; i++) {
-    arr.push(Math.round(Math.random() * 10))
-  }
-  bar.setData({titles: servers, data: arr})
+    const arr: number[] = []
+    for (let i = 0; i < servers.length; i++) {
+        arr.push(Math.round(Math.random() * 10))
+    }
+    bar.setData({titles: servers, data: arr})
 }
+
 fillBar()
 setInterval(fillBar, 2000)
 
 // set dummy data for table
 function generateTable() {
-   const data: any[] = []
+    const data: any[] = []
 
-   for (let i = 0; i < 30; i++) {
-     const row: any[] = []
-     row.push(commands[Math.round(Math.random() * (commands.length - 1))])
-     row.push(Math.round(Math.random() * 5))
-     row.push(Math.round(Math.random() * 100))
+    for (let i = 0; i < 30; i++) {
+        const row: any[] = []
+        row.push(commands[Math.round(Math.random() * (commands.length - 1))])
+        row.push(Math.round(Math.random() * 5))
+        row.push(Math.round(Math.random() * 100))
 
-     data.push(row)
-   }
+        data.push(row)
+    }
 
-   table.setData({headers: ['Process', 'Cpu (%)', 'Memory'], data: data})
+    table.setData({headers: ['Process', 'Cpu (%)', 'Memory'], data: data})
 }
 
 generateTable()
@@ -174,12 +181,12 @@ table.focus()
 setInterval(generateTable, 3000)
 
 // set log dummy data
-setInterval(function() {
-   const rnd = Math.round(Math.random() * 2)
-   if (rnd === 0) log.log('starting process ' + commands[Math.round(Math.random() * (commands.length - 1))])
-   else if (rnd === 1) log.log('terminating server ' + servers[Math.round(Math.random() * (servers.length - 1))])
-   else if (rnd === 2) log.log('avg. wait time ' + Math.random().toFixed(2))
-   screen.render()
+setInterval(function () {
+    const rnd = Math.round(Math.random() * 2)
+    if (rnd === 0) log.log('starting process ' + commands[Math.round(Math.random() * (commands.length - 1))])
+    else if (rnd === 1) log.log('terminating server ' + servers[Math.round(Math.random() * (servers.length - 1))])
+    else if (rnd === 2) log.log('avg. wait time ' + Math.random().toFixed(2))
+    screen.render()
 }, 500)
 
 // set spark dummy data
@@ -190,19 +197,19 @@ refreshSpark()
 setInterval(refreshSpark, 1000)
 
 function refreshSpark() {
-  spark1.shift()
-  spark1.push(Math.random() * 5 + 1)
-  spark2.shift()
-  spark2.push(Math.random() * 5 + 1)
-  sparkline.setData(['Server1', 'Server2'], [spark1, spark2])
+    spark1.shift()
+    spark1.push(Math.random() * 5 + 1)
+    spark2.shift()
+    spark2.push(Math.random() * 5 + 1)
+    sparkline.setData(['Server1', 'Server2'], [spark1, spark2])
 }
 
 // set line charts dummy data
 
 const errorsData = {
-   title: 'server 1',
-   x: ['00:00', '00:05', '00:10', '00:15', '00:20', '00:25'],
-   y: [30, 50, 70, 40, 50, 20],
+    title: 'server 1',
+    x: ['00:00', '00:05', '00:10', '00:15', '00:20', '00:25'],
+    y: [30, 50, 70, 40, 50, 20],
 }
 
 // const latencyData = {
@@ -213,71 +220,71 @@ const errorsData = {
 setLineData([errorsData], errorsLine)
 // setLineData([latencyData], latencyLine)
 
-setInterval(function() {
+setInterval(function () {
     setLineData([errorsData], errorsLine)
 }, 1500)
 
-setInterval(function() {
-  const colors = ['green', 'magenta', 'cyan', 'red', 'blue']
-  const text = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
+setInterval(function () {
+    const colors = ['green', 'magenta', 'cyan', 'red', 'blue']
+    const text = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
 
-  const value = Math.round(Math.random() * 100)
-  lcdLineOne.setDisplay(value + text[value % 12])
-  lcdLineOne.setOptions({
-    color: colors[value % 5],
-    elementPadding: 4,
-  })
-  screen.render()
+    const value = Math.round(Math.random() * 100)
+    lcdLineOne.setDisplay(value + text[value % 12])
+    lcdLineOne.setOptions({
+        color: colors[value % 5],
+        elementPadding: 4,
+    })
+    screen.render()
 }, 1500)
 
 let pct = 0.00
 
 function updateDonut() {
-  if (pct > 0.99) pct = 0.00
-  let color = 'green'
-  if (pct >= 0.25) color = 'cyan'
-  if (pct >= 0.5) color = 'yellow'
-  if (pct >= 0.75) color = 'red'
-  donut.setData([
-    {percent: parseFloat(((pct + 0.00) % 1) as any).toFixed(2), label: 'storage', 'color': color},
-  ])
-  pct += 0.01
+    if (pct > 0.99) pct = 0.00
+    let color = 'green'
+    if (pct >= 0.25) color = 'cyan'
+    if (pct >= 0.5) color = 'yellow'
+    if (pct >= 0.75) color = 'red'
+    donut.setData([
+        {percent: parseFloat(((pct + 0.00) % 1) as any).toFixed(2), label: 'storage', 'color': color},
+    ])
+    pct += 0.01
 }
 
-setInterval(function() {
-   updateDonut()
-   screen.render()
+setInterval(function () {
+    updateDonut()
+    screen.render()
 }, 500)
 
 function setLineData(mockData: any, line: any) {
-  for (let i = 0; i < mockData.length; i++) {
-    const last = mockData[i].y[mockData[i].y.length - 1]
-    mockData[i].y.shift()
-    const num = Math.max(last + Math.round(Math.random() * 10) - 5, 10)
-    mockData[i].y.push(num)
-  }
+    for (let i = 0; i < mockData.length; i++) {
+        const last = mockData[i].y[mockData[i].y.length - 1]
+        mockData[i].y.shift()
+        const num = Math.max(last + Math.round(Math.random() * 10) - 5, 10)
+        mockData[i].y.push(num)
+    }
 
-  line.setData(mockData)
+    line.setData(mockData)
 }
 
-screen.key(['escape', 'q', 'C-c'], function(ch, key) {
-  console.log(ch, key)
-  return process.exit(0)
+screen.key(['escape', 'q', 'C-c'], function (ch, key) {
+    console.log(ch, key)
+    return process.exit(0)
 })
 
 // fixes https://github.com/yaronn/blessed-contrib/issues/10
-screen.on('resize', function() {
-  donut.emit('attach')
-  gauge.emit('attach')
-  gaugeTwo.emit('attach')
-  sparkline.emit('attach')
-  bar.emit('attach')
-  table.emit('attach')
-  lcdLineOne.emit('attach')
-  errorsLine.emit('attach')
-  boyConsole.emit('attach')
-  girlConsole.emit('attach')
-  log.emit('attach')
+screen.on('resize', function () {
+    donut.emit('attach')
+    gauge.emit('attach')
+    gaugeTwo.emit('attach')
+    sparkline.emit('attach')
+    bar.emit('attach')
+    table.emit('attach')
+    lcdLineOne.emit('attach')
+    errorsLine.emit('attach')
+    boyConsole.emit('attach')
+    girlConsole.emit('attach')
+    log.emit('attach')
 })
 
 screen.render()
@@ -298,47 +305,47 @@ screen.render()
  *
  *
  */
-const boy   = new Wechaty({ profile: 'boy' })
-const girl  = new Wechaty({ profile: 'girl' })
+const boy = new Wechaty({profile: 'boy'})
+const girl = new Wechaty({profile: 'girl'})
 
 startBot(boy, boyConsole)
 startBot(girl, girlConsole)
 
 function startBot(bot: Wechaty, logElement: any) {
-  // logElement.log('Initing...')
-  bot
-  .on('logout'	, user => logElement.log(`${user.name()} logouted`))
-  .on('login'	  , user => {
-    logElement.setContent('')
-    logElement.log(`${user.name()} login`)
-    bot.say('Wechaty login').catch(console.error)
-    logElement.setLabel(logElement._label.content + ' - ' + user.name())
-  })
-  .on('scan', (qrcode) => {
-    generate(
-      qrcode,
-      {
-        small: true,
-      },
-      (asciiart: string) => logElement.setContent(asciiart),
-    )
-  })
-  .on('message', async m => {
-    logElement.log(m.toString())
-  })
+    // logElement.log('Initing...')
+    bot
+        .on('logout', user => logElement.log(`${user.name()} logouted`))
+        .on('login', user => {
+            logElement.setContent('')
+            logElement.log(`${user.name()} login`)
+            bot.say('Wechaty login').catch(console.error)
+            logElement.setLabel(logElement._label.content + ' - ' + user.name())
+        })
+        .on('scan', (qrcode) => {
+            generate(
+                qrcode,
+                {
+                    small: true,
+                },
+                (asciiart: string) => logElement.setContent(asciiart),
+            )
+        })
+        .on('message', async m => {
+            logElement.log(m.toString())
+        })
 
-  bot.start()
-  .catch(async e => {
-    logElement.log(`start() fail: ${e}`)
-    await bot.stop()
-    process.exit(-1)
-  })
+    bot.start()
+        .catch(async e => {
+            logElement.log(`start() fail: ${e}`)
+            await bot.stop()
+            process.exit(-1)
+        })
 
-  bot.on('error', async e => {
-    logElement.log(`error: ${e}`)
-    if (bot.logonoff()) {
-      await bot.say('Wechaty error: ' + e.message).catch(console.error)
-    }
-    // await bot.stop()
-  })
+    bot.on('error', async e => {
+        logElement.log(`error: ${e}`)
+        if (bot.logonoff()) {
+            await bot.say('Wechaty error: ' + e.message).catch(console.error)
+        }
+        // await bot.stop()
+    })
 }

@@ -1,8 +1,8 @@
 const qrTerm = require('qrcode-terminal')
 
-const { 
-  Wechaty, 
-  Message,
+const {
+    Wechaty,
+    Message,
 } = require('wechaty')
 
 const welcome = `
@@ -19,38 +19,38 @@ console.log(welcome)
 
 const bot = new Wechaty()
 
-bot.on('scan',    onScan)
-bot.on('login',   onLogin)
-bot.on('logout',  onLogout)
+bot.on('scan', onScan)
+bot.on('login', onLogin)
+bot.on('logout', onLogout)
 bot.on('message', onMessage)
-bot.on('error',   onError)
+bot.on('error', onError)
 
 bot.start()
 .catch(console.error)
 
-function onScan (qrcode, status) {
-  qrTerm.generate(qrcode, { small: true })  // show qrcode on console
+function onScan(qrcode, status) {
+    qrTerm.generate(qrcode, {small: true})  // show qrcode on console
 }
 
-function onLogin (user) {
-  console.log(`${user} login`)
+function onLogin(user) {
+    console.log(`${user} login`)
 }
 
-function onLogout (user) {
-  console.log(`${user} logout`)
+function onLogout(user) {
+    console.log(`${user} logout`)
 }
 
-function onError (e) {
-  console.error(e)
+function onError(e) {
+    console.error(e)
 }
 
 async function onMessage(msg) {
-  console.log(`RECV: ${msg}`)
-
-  if (msg.type() !== Message.Type.Text) {
-    const file = await msg.toFileBox()
-    const name = file.name
-    console.log('Save file to: ' + name)
-    file.toFile(name)
-  }
+    console.log(`RECV: ${msg}`)
+    
+    if(msg.type() !== Message.Type.Text) {
+        const file = await msg.toFileBox()
+        const name = file.name
+        console.log('Save file to: ' + name)
+        file.toFile(name)
+    }
 }
