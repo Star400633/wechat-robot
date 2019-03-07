@@ -1,6 +1,6 @@
 # WECHATY-ROBOT
 
-此项目是一个基于wecahty构建的Node.js 应用。支持多种微信接入方案，包括网页，ipad，ios，windows， android 等。同时支持Linux, OSX, Win32 和 Docker 等多个平台。
+此项目是一个基于wecahty构建的Node.js 应用。
 
 ### wechaty中文文档 <https://docs.chatie.io/wechaty>
 
@@ -17,4 +17,9 @@ cd wechat-robot
 
 ```sh
 npm install
+```
+
+### 3. 运行机器人
+```sh
+node examples/starter-bot.js
 ```
