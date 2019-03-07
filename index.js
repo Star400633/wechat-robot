@@ -1,11 +1,12 @@
 /**
- * Wechaty - WeChat Bot SDK for Personal Account, Powered by TypeScript, Docker, and 💖
+ * Wechaty - 信息机器人
  *  - https://github.com/chatie/wechaty
  */
-const {Wechaty} = require('wechaty')
+const { Wechaty } = require('wechaty')
+const startSchedule = require('./tasks/index')
 const bot = new Wechaty()
 
-// 微信扫码
+// 扫码
 function onScan(qrcode, status) {
     require('qrcode-terminal').generate(qrcode, {small: true})  // show qrcode on console
     
@@ -17,33 +18,20 @@ function onScan(qrcode, status) {
     console.log(qrcodeImageUrl)
 }
 
-// 登陆微信
-function onLogin(user) {
-    console.log(`${user} login`)
-    setTimeout(async () => {
-        await sendMessage()
-    }, 5000)
+// 登陆
+async function onLogin(user) {
+    console.log(`${user} 已登录`)
+    await startSchedule(bot)
 }
 
-// 退出微信
+// 退出
 function onLogout(user) {
-    console.log(`${user} logout`)
+    console.log(`${user} 已退出登陆`)
 }
 
 // 获取到消息
 async function onMessage(msg) {
     console.log(msg.toString())
-}
-
-// 发送消息
-async function sendMessage() {
-    let msg = '没什么话可说~'
-    let room = await bot.Room.find({topic: '测试群'})
-    try{
-        await room.say(msg)
-    } catch(e){
-        console.log(e)
-    }
 }
 
 bot.on('scan', onScan)
@@ -52,5 +40,5 @@ bot.on('logout', onLogout)
 bot.on('message', onMessage)
 
 bot.start()
-.then(() => console.log('Starter Bot Started.'))
+.then(() => console.log('微信机器人已启动.'))
 .catch(e => console.error(e))
