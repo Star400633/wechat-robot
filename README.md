@@ -21,5 +21,5 @@ npm install
 
 ### 3. 运行机器人
 ```sh
-node examples/starter-bot.js
+node index.js
 ```
