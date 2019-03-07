@@ -31,7 +31,7 @@ function onLogout(user) {
 
 // 获取到消息
 async function onMessage(msg) {
-    console.log(msg.toString())
+    // console.log(msg.toString())
 }
 
 bot.on('scan', onScan)
