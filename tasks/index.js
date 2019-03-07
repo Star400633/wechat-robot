@@ -24,7 +24,9 @@ async function main(bot) {
 }
 
 async function starSchedule(bot) {
-    schedule.setSchedule(config.SCHEDULE, main(bot))
+    schedule.setSchedule(config.SCHEDULE, async () => {
+        await main(bot)
+    })
     // setTimeout(async ()=> {
     //     await main(bot)
     // }, 3000)
