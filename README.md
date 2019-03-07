@@ -18,5 +18,3 @@ cd wechat-robot
 ```sh
 npm install
 ```
-
-### wechaty中文文档 <https://docs.chatie.io/wechaty>
