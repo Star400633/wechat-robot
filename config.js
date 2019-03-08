@@ -7,5 +7,6 @@ module.exports = {
     NAME: '百香果',//备注姓名
     NICKNAME: 'Star93', //昵称
     ROOMNAME: ['测试群', 'Bug四大侠', '我消失了'], //群名称
-    SCHEDULE: '0 0 8 * * *',//定时发送时间
+    SCHEDULE: '0 0 8 * * *',//定时发送时间 每天8点
+    HEARTBEAT: '* 0 * * * *', // 心跳 每个整点
 }

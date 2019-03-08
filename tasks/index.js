@@ -14,7 +14,7 @@ async function main(bot) {
     
     try {
         // 给微信群发送消息
-        config.ROOMNAME.forEach( async (item, i) => {
+        config.ROOMNAME.forEach( async item => {
             let room = await bot.Room.find({topic: item})
             console.log(`${new Date()}: 已经给群 =>${item} 发送消息~`)
             await room.say(str)
@@ -27,6 +27,9 @@ async function main(bot) {
 async function starSchedule(bot) {
     schedule.setSchedule(config.SCHEDULE, async () => {
         await main(bot)
+    })
+    schedule.setSchedule(config.HEARTBEAT, () => {
+        console.log(`现在是：${new Date()} 心跳正常~`)
     })
     // setTimeout(async ()=> {
     //     await main(bot)
