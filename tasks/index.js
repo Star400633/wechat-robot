@@ -16,7 +16,7 @@ async function main(bot) {
         // 给微信群发送消息
         config.ROOMNAME.forEach( async (item, i) => {
             let room = await bot.Room.find({topic: item})
-            console.log(`已经给群 =>${item} 发送消息~`)
+            console.log(`${new Date()}: 已经给群 =>${item} 发送消息~`)
             await room.say(str)
         })
     } catch (e) {
