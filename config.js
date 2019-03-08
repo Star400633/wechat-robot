@@ -7,5 +7,5 @@ module.exports = {
     NAME: '百香果',//备注姓名
     NICKNAME: 'Star93', //昵称
     ROOMNAME: ['测试群', '测试群'], //群名称
-    SCHEDULE: '00 44 10 * * *',//定时发送时间
+    SCHEDULE: '00 48 10 * * *',//定时发送时间
 }
