@@ -1,13 +1,23 @@
 /**
  * WechatBot
- *  - https://github.com/gengchen528/wechatBot
+ *  - https://docs.chatie.io/v/zh/
  */
 const {Wechaty, Friendship} = require('wechaty')
+const {FileBox} = require('file-box') //文件读取模块
+const moment = require('moment')
+const gm = require('gm')
+const fs = require('fs')
 const schedule = require('./schedule/index')
 const config = require('./config/index')
-const untils = require('./untils/index')
+const utils = require('./utils/index')
 const superagent = require('./superagent/index')
-const {FileBox} = require('file-box') //文件读取模块
+const bot = new Wechaty({name: 'WechatEveryDay'})
+
+
+const {createCanvas, loadImage} = require('canvas')
+const canvas = createCanvas(670, 1192)
+const ctx = canvas.getContext('2d')
+
 //  二维码生成
 function onScan(qrcode, status) {
     require('qrcode-terminal').generate(qrcode)  // 在console端显示二维码
@@ -16,16 +26,6 @@ function onScan(qrcode, status) {
         encodeURIComponent(qrcode),
     ].join('')
     console.log(qrcodeImageUrl)
-}
-
-// 登录
-async function onLogin(user) {
-    console.log(`贴心小助理${user}登录了`)
-    // 登陆后创建定时任务
-    schedule.setSchedule(config.SENDDATE, () => {
-        console.log('你的贴心小助理开始工作啦！')
-        main()
-    })
 }
 
 //登出
@@ -109,23 +109,43 @@ async function onFriendShip(friendship) {
 
 // 自动发消息功能
 async function main() {
-    let logMsg
     let contact = await bot.Contact.find({name: config.NICKNAME}) || await bot.Contact.find({alias: config.NAME}) // 获取你要发送的联系人
     let one = await superagent.getOne() //获取每日一句
     let weather = await superagent.getWeather() //获取天气信息
-    console.log('weather', weather)
-    let today = await untils.formatDate(new Date())//获取今天的日期
-    let memorialDay = untils.getDay(config.MEMORIAL_DAY)//获取纪念日天数
-    // let str = today + '<br>' + '今天是我们在一起的第' + memorialDay + '天' +
-    let str = '<br><br>今日天气早知道<br>' + weather.weatherTips + '<br>' + weather.todayWeather + '<br>每日一句:<br>' + one + '<br><br>'
+    const { source, title, summary, image } = one
+    const { weatherText, temp, } = weather
+    const fileName = `./static/${moment().format('YYYY_MM_DD_hh_mm_ss')}.jpg`
     
-    try {
-        logMsg = str
-        await contact.say(str) // 发送消息
-    } catch (e) {
-        logMsg = e.message
-    }
-    console.log(logMsg)
+    loadImage(image[0]).then((resolve) => {
+        ctx.drawImage(resolve, 0, 0, 670, 1192)
+        
+        utils.textWrap(ctx, moment().format('D'), 490, 200, 128) // 本月几号
+        utils.textWrap(ctx, `${moment().format('MMM')} / ${moment().format('YYYY')}`, 510, 260, 28) // 本月几号
+        utils.textWrap(ctx, title, 40, 900, 46) // 英文
+        utils.textWrap(ctx, summary, 40, 1020, 26) // 中文
+        utils.textWrap(ctx, `#${source}`, 40, 1100, 20) // 出处
+        utils.textWrap(ctx, `${weatherText} | ${temp}`, 630, 1150, 24, 'right') // 天气
+        
+        let imgData = canvas.toDataURL()
+        let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
+        let dataBuffer = new Buffer(base64Data, 'base64')
+        
+        fs.writeFileSync(fileName, dataBuffer)
+        return Promise.resolve(true)
+    }).then(async (resolve) => {
+        try {
+            let logMsg = FileBox.fromFile(fileName)
+            console.log('logMsg', logMsg)
+            if(logMsg) {
+                await contact.say(logMsg) // 发送消息
+                console.log('发送成功~')
+            } else {
+                console.log('error')
+            }
+        } catch (e) {
+            console.log('message===', e.message)
+        }
+    })
 }
 
 // 加群提醒
@@ -140,8 +160,19 @@ function roomJoin(room, inviteeList, inviter) {
     })
 }
 
-const bot = new Wechaty({name: 'WechatEveryDay'})
+// 登录
+async function onLogin(user) {
+    console.log(`贴心小助理${user}登录了`)
+    // 登陆后创建定时任务
+    // schedule.setSchedule(config.SENDDATE, async () => {
+    //     console.log('你的贴心小助理开始工作啦！')
+    //     await main()
+    // })
+}
 
+setTimeout(async ()=> {
+    await main()
+}, 1000)
 bot.on('scan', onScan)
 bot.on('login', onLogin)
 bot.on('logout', onLogout)
@@ -149,6 +180,6 @@ bot.on('message', onMessage)
 bot.on('friendship', onFriendShip)
 bot.on('room-join', roomJoin)
 
-bot.start()
-.then(() => console.log('开始登陆微信'))
-.catch(e => console.error(e))
+// bot.start()
+// .then(() => console.log('开始登陆微信'))
+// .catch(e => console.error(e))

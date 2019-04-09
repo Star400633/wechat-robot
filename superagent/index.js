@@ -1,37 +1,38 @@
+const cheerio = require('cheerio')
+const moment = require('moment')
+const gm = require('gm')
 const superagent = require('../config/superagent')
 const config = require('../config/index')
-const cheerio = require('cheerio')
 
-async function getOne() { // 获取每日一句
-    let res = await superagent.req(config.ONE, 'GET')
-    let $ = cheerio.load(res.text)
-    let todayOneList = $('#carousel-one .carousel-inner .item')
-    let todayOne = $(todayOneList[0]).find('.fp-one-cita').text().replace(/(^\s*)|(\s*$)/g, "")
-    return todayOne;
+// 获取每日一句
+async function getOne() {
+    let res = await superagent.req(config.YOUDAO, 'GET')
+    const content = JSON.parse(res.text)
+    const lastDay = content[0]
+    
+    return lastDay
 }
 
 async function getWeather() { //获取墨迹天气
     let url = config.MOJI_HOST + config.CITY + '/' + config.LOCATION
     let res = await superagent.req(url, 'GET')
+    
     let $ = cheerio.load(res.text)
     let weatherTips = $('.wea_tips em').text()
     const today = $('.forecast .days').first().find('li');
     let todayInfo = {
-        Day: $(today[0]).text().replace(/(^\s*)|(\s*$)/g, ""),
-        WeatherText: $(today[1]).text().replace(/(^\s*)|(\s*$)/g, ""),
-        Temp: $(today[2]).text().replace(/(^\s*)|(\s*$)/g, ""),
-        Wind: $(today[3]).find('em').text().replace(/(^\s*)|(\s*$)/g, ""),
-        WindLevel: $(today[3]).find('b').text().replace(/(^\s*)|(\s*$)/g, ""),
-        PollutionLevel: $(today[4]).find('strong').text().replace(/(^\s*)|(\s*$)/g, "")
-    }
-    let obj = {
         weatherTips: weatherTips,
-        todayWeather: todayInfo.Day + ':' + todayInfo.WeatherText + '<br>' + '温度:' + todayInfo.Temp + '<br>'
-            + todayInfo.Wind + todayInfo.WindLevel + '<br>' + '空气:' + todayInfo.PollutionLevel + '<br>'
+        day: $(today[0]).text().replace(/(^\s*)|(\s*$)/g, ""),
+        weatherText: $(today[1]).text().replace(/(^\s*)|(\s*$)/g, ""),
+        temp: $(today[2]).text().replace(/(^\s*)|(\s*$)/g, "").replace('° /', ' ~'),
+        wind: $(today[3]).find('em').text().replace(/(^\s*)|(\s*$)/g, ""),
+        windLevel: $(today[3]).find('b').text().replace(/(^\s*)|(\s*$)/g, ""),
+        pollutionLevel: $(today[4]).find('strong').text().replace(/(^\s*)|(\s*$)/g, "")
     }
-    return obj
+    return todayInfo
 }
 
 module.exports = {
-    getOne, getWeather
+    getOne,
+    getWeather
 }
