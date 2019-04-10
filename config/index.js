@@ -8,8 +8,8 @@ module.exports = {
     CITY: 'zhejiang',//收信者所在城市
     LOCATION: 'gongshu-district',//收信者所在区 （可以访问墨迹天气网站后，查询区的英文拼写）
     MEMORIAL_DAY: '2015/04/18', //你和收信者的纪念日
-    NAME: '二维火测试机',//备注姓名
-    NICKNAME: '局外人', //昵称
+    NAME: '局外人',//备注姓名
+    NICKNAME: '二维火测试机', //昵称
     ROOMNAME: '测试群', //群名称
     SENDDATE: '02 03 17 * * *',//定时发送时间 每天8点15分30秒发送，规则见 /schedule/index.js
     ROOMNAME: '/^啦啦啦咔咔/i', //群名(请只修改中文，不要删除符号，这是正则)
