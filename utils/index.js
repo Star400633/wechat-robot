@@ -1,3 +1,5 @@
+const superagent = require('superagent')
+
 /**
  * canvas支持文字换行
  * @param ctx canvas上下文
@@ -34,6 +36,22 @@ function textWrap(context, text='', x=0, y=0, size=20, position='left', color="w
     context.fillText(line, x, y)
 }
 
+//请求
+function request(url, method, params, data, cookies) {
+    return new Promise(function(resolve, reject) {
+        superagent(method, url)
+        .query(params)
+        .send(data)
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .end(function(err, response) {
+            if(err) {
+                reject(err)
+            }
+            resolve(response)
+        })
+    })
+}
 module.exports = {
-    textWrap
+    textWrap,
+    request
 }

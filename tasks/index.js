@@ -1,10 +1,10 @@
 const cheerio = require('cheerio')
-const superagent = require('../config/superagent')
+const { request } = require('../utils/index')
 const config = require('../config/index')
 
 // 获取每日一句
 async function getOne() {
-    let res = await superagent.req(config.YOUDAO, 'GET')
+    let res = await request(config.YOUDAO, 'GET')
     const content = JSON.parse(res.text)
     const lastDay = content[0]
     
@@ -13,7 +13,7 @@ async function getOne() {
 
 async function getWeather() { //获取墨迹天气
     let url = config.MOJI_HOST + config.CITY + '/' + config.LOCATION
-    let res = await superagent.req(url, 'GET')
+    let res = await request(url, 'GET')
     
     let $ = cheerio.load(res.text)
     let weatherTips = $('.wea_tips em').text()
