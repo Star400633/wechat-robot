@@ -36,7 +36,7 @@ bot.start()
 async function onLogin(user) {
     console.log(`贴心小助理${user}登录了`)
     // 登陆后创建定时任务
-    if(true) {
+    if(false) {
         setTimeout(async ()=> {
             await main()
         }, 1000)
