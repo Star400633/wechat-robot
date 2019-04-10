@@ -11,7 +11,7 @@ const schedule = require('./schedule/index')
 const config = require('./config/index')
 const utils = require('./utils/index')
 const superagent = require('./superagent/index')
-const bot = new Wechaty()
+const bot = new Wechaty({name: 'WechatEveryDay'})
 
 // canvas绘制图片相关
 const {createCanvas, loadImage} = require('canvas')
@@ -48,7 +48,7 @@ async function onLogin(user) {
 
 // 自动发消息功能
 async function main() {
-    let contact = await bot.Contact.find({name: config.NICKNAME}) // 获取你要发送的联系人
+    let contact = await bot.Contact.find({name: config.NICKNAME}) || await bot.Contact.find({alias: config.NAME}) // 获取你要发送的联系人
     let one = await superagent.getOne() //获取每日一句
     let weather = await superagent.getWeather() //获取天气信息
     const { source, title, summary, image } = one
@@ -77,7 +77,7 @@ async function main() {
             gm(fileName)
             .resize(670, 1192)
             .quality(90)
-            .write(resultimg, async function(err) {
+            .write(resultimg, async (err) => {
                 if (err) console.log('error')
                 
                 let logMsg = FileBox.fromFile(resultimg)
