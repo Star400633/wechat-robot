@@ -11,7 +11,7 @@ module.exports = {
     NAME: '二维火测试机',//备注姓名
     NICKNAME: '局外人', //昵称
     ROOMNAME: '测试群', //群名称
-    SENDDATE: '02 03 17 * * *',//定时发送时间 每天8点15分30秒发送，规则见 /schedule/index.js
+    SENDDATE: '14 30 0 * * *',//定时发送时间 每天8点0分0秒发送，规则见 /schedule/index.js
     ROOMNAME: '/^啦啦啦咔咔/i', //群名(请只修改中文，不要删除符号，这是正则)
     ADDFRIENDWORD: '/你要触发的关键词/i',//自动加好友触发的关键词(请只修改中文，不要删除符号，这是正则)
     ADDROOMWORD: '/加群/',//自动发送群图片触发关键词(请只修改中文，不要删除符号，这是正则)

@@ -32,21 +32,20 @@ bot.start()
     process.exit(-1)
 })
 
-
 // 登录
 async function onLogin(user) {
     console.log(`贴心小助理${user}登录了`)
     // 登陆后创建定时任务
-    // schedule.setSchedule(config.SENDDATE, async () => {
-    await main()
-    // })
+    if(false) {
+        setTimeout(async ()=> {
+            await main()
+        }, 1000)
+    } else {
+        schedule.setSchedule(config.SENDDATE, async () => {
+            await main()
+        })
+    }
 }
-
-// setTimeout(async ()=> {
-//     await main()
-// }, 1000)
-
-
 
 // 自动发消息功能
 async function main() {
@@ -71,7 +70,7 @@ async function main() {
         
         let imgData = canvas.toDataURL()
         let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "")
-        let dataBuffer = new Buffer(base64Data, 'base64')
+        let dataBuffer = Buffer.from(base64Data, 'base64')
         
         fs.writeFileSync(fileName, dataBuffer)
         return Promise.resolve(true)
@@ -85,10 +84,9 @@ async function main() {
                 if (err) console.log('error')
                 
                 let logMsg = FileBox.fromFile(resultimg)
-                console.log('logMsg', logMsg)
                 if(logMsg) {
                     await contact.say(logMsg) // 发送消息
-                    console.log('发送成功~')
+                    console.log('发送成功~', logMsg)
                 } else {
                     console.log('error')
                 }

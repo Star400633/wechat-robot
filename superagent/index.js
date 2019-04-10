@@ -1,6 +1,4 @@
 const cheerio = require('cheerio')
-const moment = require('moment')
-const gm = require('gm')
 const superagent = require('../config/superagent')
 const config = require('../config/index')
 

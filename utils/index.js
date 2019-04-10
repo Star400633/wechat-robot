@@ -1,5 +1,3 @@
-const gm = require('gm')
-
 /**
  * canvas支持文字换行
  * @param ctx canvas上下文
