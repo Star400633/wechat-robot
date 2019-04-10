@@ -11,7 +11,7 @@ const schedule = require('./schedule/index')
 const config = require('./config/index')
 const utils = require('./utils/index')
 const superagent = require('./superagent/index')
-const bot = new Wechaty({name: 'myRobot'})
+const bot = new Wechaty({name: 'WechatEveryDay'})
 
 // canvas绘制图片相关
 const {createCanvas, loadImage} = require('canvas')
@@ -27,7 +27,10 @@ bot.on('room-join', roomJoin)
 
 bot.start()
 .then(() => console.log('开始登陆微信'))
-.catch(e => console.error(e))
+.catch(async e => {
+    await bot.stop()
+    process.exit(-1)
+})
 
 
 // 登录
@@ -47,8 +50,9 @@ async function onLogin(user) {
 
 // 自动发消息功能
 async function main() {
-    console.log('你的贴心小助理开始工作啦！')
-    let contact = await bot.Contact.find({name: config.NAME}) || await bot.Contact.find({alias: config.NICKNAME}) // 获取你要发送的联系人
+    console.log('开始工作~')
+    let contact = await bot.Contact.find({name: config.NICKNAME}) || await bot.Contact.find({alias: config.NAME}) // 获取你要发送的联系人
+    
     let one = await superagent.getOne() //获取每日一句
     let weather = await superagent.getWeather() //获取天气信息
     const { source, title, summary, image } = one
@@ -76,7 +80,7 @@ async function main() {
             const resultimg = `./static/${Date.now()}.jpg`
             gm(fileName)
             .resize(670, 1192)
-            .quality(90)
+            .quality(100)
             .write(resultimg, async (err) => {
                 if (err) console.log('error')
                 
