@@ -7,7 +7,7 @@ module.exports = {
     MOJI_HOST: 'https://tianqi.moji.com/weather/china/', //墨迹天气url
     CITY: 'zhejiang',//收信者所在城市
     LOCATION: 'gongshu-district',//收信者所在区 （可以访问墨迹天气网站后，查询区的英文拼写）
-    MEMORIAL_DAY: '2015/04/18', //你和收信者的纪念日
+    MEMORIAL_DAY: '2013/04/18', //你和收信者的纪念日
     NAME: '明月',//备注姓名
     NICKNAME: 'W _cloudy明月🍓', //昵称
     ROOMNAME: '测试群', //群名称
