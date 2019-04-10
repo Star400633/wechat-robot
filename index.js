@@ -128,9 +128,9 @@ async function onMessage(msg) {
     }
     if(room) { // 如果是群消息
         const topic = await room.topic()
-        console.log(`群名: ${topic} 发消息人: ${contact.name()} 内容: ${content}`)
+        // console.log(`群名: ${topic} 发消息人: ${contact.name()} 内容: ${content}`)
     } else { // 如果非群消息
-        console.log(`发消息人: ${contact.name()} 消息内容: ${content}`)
+        // console.log(`发消息人: ${contact.name()} 消息内容: ${content}`)
         if(config.AUTOADDROOM) { //判断是否开启自动加群功能
             let addRoomReg = eval(config.ADDROOMWORD)
             let roomReg = eval(config.ROOMNAME)
