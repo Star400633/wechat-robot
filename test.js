@@ -24,7 +24,7 @@ async function main() {
         ctx.drawImage(resolve, 0, 0, 670, 1192)
     
         utils.textWrap(ctx, moment().format('D'), 490, 200, 128) // 本月几号
-        utils.textWrap(ctx, `${moment().format('MMM')} / ${moment().format('YYYY')}`, 500, 260, 28) // 本月几号
+        utils.textWrap(ctx, `${moment().format('MMM')} / ${moment().format('YYYY')}`, 490, 260, 28) // 本月几号
         utils.textWrap(ctx, title, 40, 880, 42) // 英文
         utils.textWrap(ctx, summary, 40, 1030, 20) // 中文
         utils.textWrap(ctx, `#${source}`, 40, 1100, 20) // 出处
