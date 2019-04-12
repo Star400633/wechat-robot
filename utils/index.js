@@ -24,7 +24,7 @@ function textWrap(context, text='', x=0, y=0, size=20, position='left', color="w
         let testLine = line + arrText[n]
         let metrics = context.measureText(testLine)
         let testWidth = metrics.width
-        if (testWidth > maxWidth-x && n > 0 && position === 'left') {
+        if (testWidth > maxWidth-(x+30) && n > 0 && position === 'left') {
             context.fillText(line, x, y)
             line = arrText[n]
             y += lineHeight
@@ -34,6 +34,7 @@ function textWrap(context, text='', x=0, y=0, size=20, position='left', color="w
     }
     
     context.fillText(line, x, y)
+    return line
 }
 
 //请求
@@ -51,7 +52,29 @@ function request(url, method, params, data, cookies) {
         })
     })
 }
+
+// 获取星期几
+function getWeekDay() {
+    const day = new Date().getDay()
+    switch(day) {
+        case 0:
+            return '周日'
+        case 1:
+            return '周一'
+        case 2:
+            return '周二'
+        case 3:
+            return '周三'
+        case 4:
+            return '周四'
+        case 5:
+            return '周五'
+        case 6:
+            return '周六'
+    }
+}
 module.exports = {
     textWrap,
-    request
+    request,
+    getWeekDay,
 }
