@@ -35,7 +35,7 @@ bot.start()
 // 登录
 async function onLogin(user) {
     // 登陆后创建定时任务
-    if(true) {
+    if(false) {
         setTimeout(async ()=> {
             await main()
         }, 1000)
