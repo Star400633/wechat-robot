@@ -34,6 +34,7 @@ bot.start()
 
 // 登录
 async function onLogin(user) {
+    console.log(`${user} 登陆成功~`)
     // 登陆后创建定时任务
     if(false) {
         setTimeout(async ()=> {
