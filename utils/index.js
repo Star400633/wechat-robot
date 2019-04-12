@@ -16,7 +16,7 @@ function textWrap(context, text='', x=0, y=0, size=20, position='left', color="w
     let arrText = text.split('')
     let line = ''
     
-    context.font = `${size}px Arial`
+    context.font = `${size}px Microsoft YaHei`
     context.fillStyle = color
     context.textAlign = position
     

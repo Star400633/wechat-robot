@@ -9,7 +9,7 @@ module.exports = {
     LOCATION: 'gongshu-district',//收信者所在区 （可以访问墨迹天气网站后，查询区的英文拼写）
     MEMORIAL_DAY: '2013/04/18', //你和收信者的纪念日
     NAME: '明月',//备注姓名
-    NICKNAME: 'W _cloudy明月🍓', //昵称
+    NICKNAME: '局外人', //昵称  'W _cloudy明月🍓''
     ROOMNAME: '测试群', //群名称
     SENDDATE: '0 0 8 * * *',//定时发送时间 每天8点15分30秒发送，规则见 /schedule/index.js
     ROOMNAME: '/^啦啦啦咔咔/i', //群名(请只修改中文，不要删除符号，这是正则)
