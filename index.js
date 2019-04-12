@@ -34,7 +34,6 @@ bot.start()
 
 // 登录
 async function onLogin(user) {
-    console.log(`登录成功~`)
     // 登陆后创建定时任务
     if(true) {
         setTimeout(async ()=> {
@@ -82,15 +81,15 @@ async function main() {
             .quality(100)
             .write(resultimg, async (err) => {
                 if (err) console.log('error')
-                fs.unlinkSync(fileName)
                 
-                return
                 let logMsg = FileBox.fromFile(resultimg)
+                
                 if(logMsg) {
                     await contact.say(logMsg) // 发送消息
+                    fs.unlinkSync(fileName)
                     console.log('发送成功~')
                 } else {
-                    console.log('error')
+                    console.log('error', logMsg)
                 }
             })
             
