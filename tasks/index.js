@@ -6,7 +6,7 @@ const config = require('../config/index')
 async function getOne() {
     let res = await request(config.YOUDAO, 'GET')
     const content = JSON.parse(res.text)
-    const lastDay = content[1]
+    const lastDay = content[0]
     
     return lastDay
 }
