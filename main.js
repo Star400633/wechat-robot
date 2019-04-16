@@ -33,7 +33,7 @@ bot.start()
 async function onLogin(user) {
     console.log(`${user} 登陆成功~`)
     // 登陆后创建定时任务
-    if(false) {
+    if(true) {
         setTimeout(async ()=> {
             await main()
         }, 1000)
