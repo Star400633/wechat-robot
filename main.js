@@ -33,7 +33,7 @@ bot.start()
 async function onLogin(user) {
     console.log(`${user} 登陆成功~`)
     // 登陆后创建定时任务
-    if(true) {
+    if(false) {
         setTimeout(async ()=> {
             await main()
         }, 1000)
@@ -94,9 +94,10 @@ async function main() {
                     // 群
                     for(const item of config.ROOMNAME) {
                         let room = await bot.Room.find({topic: item})
-                        console.log(room)
                         await room.say(sendMessage)
                     }
+                    
+                    console.log('sendMessage', sendMessage)
     
                     fs.unlinkSync(fileName) // 删除文件
                     
