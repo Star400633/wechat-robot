@@ -82,27 +82,27 @@ async function main() {
             .write(resultimg, async (err) => {
                 if (err) console.log('error')
                 
-                let sendMessage = FileBox.fromFile(resultimg)
+                let sendImg = FileBox.fromFile(resultimg)
                 
-                if(sendMessage) {
+                if(sendImg) {
                     // 联系人
                     for(const item of config.NICKNAME_LIST) {
                         let contact = await bot.Contact.find({name: item}) // 获取你要发送的联系人
-                        await contact.say(sendMessage) // 发送消息
+                        await contact.say(sendImg) // 发送消息
                     }
                     
                     // 群
                     for(const item of config.ROOMNAME) {
                         let room = await bot.Room.find({topic: item})
-                        await room.say(sendMessage)
+                        await room.say(sendImg)
                     }
                     
-                    console.log('sendMessage', sendMessage)
+                    console.log('sendImg', sendImg)
     
                     fs.unlinkSync(fileName) // 删除文件
                     
                 } else {
-                    console.log('error', sendMessage)
+                    console.log('error', sendImg)
                 }
             })
             
