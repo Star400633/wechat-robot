@@ -42,7 +42,6 @@ async function sendWechatMessage() {
       content: tips
     }
   }
-  console.log('====tips', tips)
   await request(config.WEB_HOOK, 'POST', {}, data)
 }
 
