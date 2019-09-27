@@ -30,7 +30,25 @@ async function getWeather() { //获取墨迹天气
     return todayInfo
 }
 
+
+// 企业微信发送信息
+async function sendWechatMessage() {
+  let weather = await getWeather() //获取天气信息
+  const { weatherText, temp, wind, windLevel, pollutionLevel, weatherTips } = weather
+  const tips = `今日${weatherText}，气温${temp}，${wind}${windLevel}，空气质量：${pollutionLevel}，${weatherTips}`
+  const data = {
+    msgtype: 'text',
+    text: {
+      content: tips
+    }
+  }
+  console.log('====tips', tips)
+  await request(config.WEB_HOOK, 'POST', {}, data)
+}
+
+
 module.exports = {
     getOne,
-    getWeather
+    getWeather,
+    sendWechatMessage,
 }

@@ -39,15 +39,21 @@ function textWrap(context, text='', x=0, y=0, size=20, position='left', color="w
 
 //请求
 function request(url, method, params, data, cookies) {
+    let contentType = ''
+    if(method === 'GET') {
+        contentType = 'application/x-www-form-urlencoded'
+    } else if(method === 'POST') {
+        contentType = 'application/json'
+    }
     return new Promise(function(resolve, reject) {
         superagent(method, url)
-        .query(params)
+        .set('Content-Type', contentType)
         .send(data)
-        .set('Content-Type', 'application/x-www-form-urlencoded')
         .end(function(err, response) {
             if(err) {
                 reject(err)
             }
+            console.log('====method, url', response)
             resolve(response)
         })
     })
